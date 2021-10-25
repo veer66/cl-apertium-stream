@@ -54,9 +54,15 @@
   (:lambda (lst)
     (cons :ling-form (concat-string lst))))
 
+(defrule invariable-part (and #\# ling-form)
+  (:lambda (lst)
+    (cons :invariable-part (cdadr lst))))
+
 (defrule sub-lu (and flag
                      ling-form
-                     (* tag)))
+                     (* invariable-part)
+                     (* tag)
+                     (* invariable-part)))
 
 (defrule sub-lus (and sub-lu (* (and #\/ sub-lu)))
   (:lambda (lst)
@@ -118,16 +124,17 @@
 ;; (parse 'chunk "N1<SN><a>{^i$ [<o>]^j$[</o>]^k$}")
 ;; (parse 'joined-lu "^กาขา/กา<t1>+ขา<ม>$")
 ;; (parse 'joined-sub-lus "กาขา/กา<t1>+ขา<ม>")
+;; (parse 'joined-sub-lus "กาขาตัว/กา<t1>+ขา<ม>#ตัว")
+;; (parse 'joined-sub-lus "กาขาตัว/กา<t1>+ขา#ตัว<ม>")
 ;; (parse 'joined-sub-lu "กา<t1>+ขา<ม>")
 ;; (parse 'basic-lu "^กา<t1>$")
 ;; (parse 'basic-lu "^กา<t1>/กา<t2>/กา<t3>$")
-
-
 ;; (parse 'sub-lu "*กา<t1><t2>")
 ;; (parse 'sub-lu "กา<t1><t2>")
 ;; (parse 'sub-lu "#<t1><t2>")
 ;; (parse 'sub-lu "<t1><t2>")
 ;; (parse 'sub-lu "กา")
-
+;; (parse 'sub-lu "หมาบ้าน# ตัว<n><sg>")
+;; (parse 'sub-lu "หมาบ้าน<n><sg># ตัว")
 ;; (parse 'format "[HTML]")
 ;; (parse 'spaces "           ")
