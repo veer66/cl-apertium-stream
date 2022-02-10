@@ -44,7 +44,7 @@
 
 (defrule tag (and #\< (+ (not (or #\< #\>))) #\>)
   (:lambda (lst)
-    (cons :tag (concat-string (cadr lst)))))
+    (concat-string (cadr lst))))
 
 (defrule flag (? (or #\* #\# #\@))
   (:lambda (lst)
@@ -54,15 +54,24 @@
   (:lambda (lst)
     (cons :ling-form (concat-string lst))))
 
-(defrule invariable-part (and #\# ling-form)
+(defrule sub-invariable-part (and #\# ling-form)
   (:lambda (lst)
-    (cons :invariable-part (cdadr lst))))
+    (cdadr lst)))
+
+(defrule invariable-part
+    (* sub-invariable-part)
+  (:lambda (lst)
+    (cons :invariable-part lst)))
+
+(defrule tags (* tag)
+  (:lambda (lst)
+    (cons :tags lst)))
 
 (defrule sub-lu (and flag
                      ling-form
-                     (* invariable-part)
-                     (* tag)
-                     (* invariable-part)))
+                     invariable-part
+                     tags
+                     invariable-part))
 
 (defrule sub-lus (and sub-lu (* (and #\/ sub-lu)))
   (:lambda (lst)
