@@ -1,6 +1,6 @@
-;;;; cl-apertium-stream-parser.lisp
+;;;; cl-apertium-stream.lisp
 
-(in-package #:cl-apertium-stream-parser)
+(in-package #:cl-apertium-stream)
 
 (defun concat-string (lst)
   (format nil "~{~a~}" lst))
