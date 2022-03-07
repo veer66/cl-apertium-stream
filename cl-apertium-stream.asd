@@ -6,6 +6,6 @@
   :license  "Apache-2.0"
   :version "0.0.3"
   :serial t
-  :depends-on (#:esrap)
+  :depends-on (#:esrap #:cl-ppcre)
   :components ((:file "package")
                (:file "parser")))

@@ -61,7 +61,7 @@
 (defrule invariable-part
     (* sub-invariable-part)
   (:lambda (lst)
-    (cons :invariable-part lst)))
+    (cons :invariable-part (car lst))))
 
 (defrule tags (* tag)
   (:lambda (lst)
@@ -118,8 +118,9 @@
 (defrule chunk (and sub-lu
                     chunk-children)
   (:lambda (lst)    
-    (list (cons :head (car lst))
-          (cons :children (cdr lst)))))
+    (list :chunk
+	  (cons :head (car lst))
+          (cons :children (car (cdr lst))))))
 
 
 (defrule stream-unit (or spaces format basic-lu joined-lu chunk))
@@ -144,6 +145,7 @@
 ;; (parse 'sub-lu "<t1><t2>")
 ;; (parse 'sub-lu "กา")
 ;; (parse 'sub-lu "หมาบ้าน# ตัว<n><sg>")
-;; (parse 'sub-lu "หมาบ้าน<n><sg># ตัว")
-;; (parse 'format "[HTML]")
-;; (parse 'spaces "           ")
+;; (parse 'flag "")
+;; (print (parse 'sub-lu "หมาบ้าน<n><sg># ตัว"))
+;; (print (parse 'format "[HTML]"))
+;; (print (parse 'spaces "           "))
