@@ -65,11 +65,12 @@
 	  (loop for child-node in node
 		collect
 		(let ((sym (car child-node)))
-		  (ecase sym
+		  (case sym
 		    (:FLAG (to-flag-substream child-node))
 		    (:LING-FORM (to-ling-form-substream child-node))
 		    (:TAGS (to-tags-substream child-node))
-		    (:INVARIABLE-PART (to-invariable-part-substream child-node)))))))
+		    (:INVARIABLE-PART (to-invariable-part-substream child-node))
+		    (otherwise ""))))))
 
 (defun child-nodes-to-lexical-unit-substream (child-nodes)
   (if child-nodes
