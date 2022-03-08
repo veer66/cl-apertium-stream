@@ -8,4 +8,5 @@
   :serial t
   :depends-on (#:esrap #:cl-ppcre)
   :components ((:file "package")
-               (:file "parser")))
+               (:file "parser")
+	       (:file "generator")))
