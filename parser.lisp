@@ -5,10 +5,6 @@
 (defun concat-string (lst)
   (format nil "~{~a~}" lst))
 
-(defrule spaces (+ (or #\space #\tab #\newline #\linefeed))
-  (:lambda (lst)
-    (cons :spaces (concat-string lst))))
-
 (defrule format (and #\[
                      (+ (or (not (or #\[ #\]))
                             (and #\\ #\[)
@@ -106,11 +102,16 @@
   (:lambda (lst)
     (cons :joined-lexical-unit (cadr lst))))
 
+(defrule unparsed (+ (not (or #\[ #\] #\^ #\$ #\} #\{)))
+  (:lambda (lst)
+    (cons :unparsed (concat-string lst))))
+
 (defrule chunk-children (and #\{
                              (* (or format
                                     basic-lu
                                     joined-lu
-                                    spaces))
+				    unparsed
+                                    ))
                              #\})
   (:lambda (lst)
     (cadr lst)))
@@ -123,7 +124,7 @@
           (cons :children (car (cdr lst))))))
 
 
-(defrule stream-unit (or spaces format basic-lu joined-lu chunk))
+(defrule stream-unit (or unparsed format basic-lu joined-lu chunk))
 
 (defrule stream (* stream-unit))
 
@@ -131,7 +132,7 @@
   (parse 'stream s))
 
 ;; (parse 'stream "^กาขา/กา<t1>+ขา<ม>$ ^กา<t1>+ขา<ม>$")
-;; (parse 'chunk "N1<SN><a>{^i$ [<o>]^j$[</o>]^k$}")
+;; (parse 'chunk "N1<SN><a>{^i$[<o>]^j$[</o>] ^k$}")
 ;; (parse 'joined-lu "^กาขา/กา<t1>+ขา<ม>$")
 ;; (parse 'joined-sub-lus "กาขา/กา<t1>+ขา<ม>")
 ;; (parse 'joined-sub-lus "กาขาตัว/กา<t1>+ขา<ม>#ตัว")
@@ -148,4 +149,4 @@
 ;; (parse 'flag "")
 ;; (print (parse 'sub-lu "หมาบ้าน<n><sg># ตัว"))
 ;; (print (parse 'format "[HTML]"))
-;; (print (parse 'spaces "           "))
+;; (print (parse 'unparsed "           "))

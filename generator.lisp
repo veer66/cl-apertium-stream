@@ -6,9 +6,9 @@
    (%expected-symbol :initarg :expected-symbol
 		     :reader expected-symbol)))
 
-(defun to-spaces-substream (node)
-  (unless (eq (car node) :SPACES)
-    (error 'generation-error :nodes (list node) :expected-symbol :SPACES))
+(defun to-unparsed-substream (node)
+  (unless (eq (car node) :UNPARSED)
+    (error 'generation-error :nodes (list node) :expected-symbol :UNPARSED))
   (cdr node))
 
 (defun to-format-substream (node)
@@ -108,7 +108,7 @@
 
 (defun to-chunk-child-substream (child)
   (ecase (car child)
-    (:SPACES (to-spaces-substream child))
+    (:UNPARSED (to-unparsed-substream child))
     (:LEXICAL-UNIT (to-lexical-unit-substream child))
     (:JOINED-LEXICAL-UNIT (to-joined-lexical-unit-substream child))
     (:FORMAT (to-format-substream child))))
@@ -137,7 +137,7 @@
 	  (loop for node in nodes
 		collect
 		(ecase (car node)
-		  (:SPACES (to-spaces-substream node))
+		  (:UNPARSED (to-unparsed-substream node))
 		  (:LEXICAL-UNIT (to-lexical-unit-substream node))
 		  (:JOINED-LEXICAL-UNIT (to-joined-lexical-unit-substream node))
 		  (:FORMAT (to-format-substream node))
@@ -151,7 +151,7 @@
 ;;       (:INVARIABLE-PART))
 ;;      ((:FLAG) (:LING-FORM . "ขา") (:INVARIABLE-PART) (:TAGS "ม")
 ;;       (:INVARIABLE-PART))))
-;;    (:SPACES . " ")
+;;    (:UNPARSED . " ")
 ;;    (:JOINED-LEXICAL-UNIT
 ;;     (((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t1")
 ;;       (:INVARIABLE-PART))
@@ -164,7 +164,7 @@
 ;;  (:CHILDREN
 ;;   (:LEXICAL-UNIT
 ;;    ((:FLAG) (:LING-FORM . "i") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART)))
-;;   (:SPACES . " ") (:FORMAT . "<o>")
+;;   (:UNPARSED . " ") (:FORMAT . "<o>")
 ;;   (:LEXICAL-UNIT
 ;;    ((:FLAG) (:LING-FORM . "j") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART)))
 ;;   (:FORMAT . "</o>")
@@ -190,7 +190,7 @@
 ;; (to-tags-substream '(:TAGS . "n"))
 ;; (parse 'sub-lu "หมาบ้าน<n><sg># ตัว")
 ;; ((:FLAG) (:LING-FORM . "หมาบ้าน") (:INVARIABLE-PART) (:TAGS "n" "sg") (:INVARIABLE-PART " ตัว"))
-;; (to-spaces-substream-stream '(:SPACES . "           "))
+;; (to-unparsed-substream-stream '(:UNPARSED . "           "))
 ;; (to-format-substream '(:FORMAT . "HTML"))
 ;; (to-flag-substream '(:FLAG . "*"))
 
