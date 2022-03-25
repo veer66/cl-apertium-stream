@@ -84,8 +84,11 @@
   (unless (eq (car node) :LEXICAL-UNIT)
     (error 'generation-error :generation-error :nodes (list node)
 					       :expected-symbol :LEXICAL-UNIT))
-  (let ((child-nodes (cdr node)))
-    (child-nodes-to-lexical-unit-substream child-nodes)))
+  (let ((inner-stream (let ((child-nodes (cdr node)))
+			(child-nodes-to-lexical-unit-substream child-nodes))))
+    (if (equal "" inner-stream)
+	""
+	(format nil "^~A$" inner-stream))))
 
 (defun to-joined-lexical-unit-substream (node)
   (unless (eq (car node) :JOINED-LEXICAL-UNIT)
@@ -94,7 +97,7 @@
   (let ((lexical-unit-nodes (cdr node)))
     (if lexical-unit-nodes
 	(format nil
-		"~{~A~^+~}"
+		"^~{~A~^+~}$"
 		(loop for sub-lexical-units in lexical-unit-nodes
 		      collect
 		      (child-nodes-to-lexical-unit-substream sub-lexical-units)))
@@ -129,7 +132,7 @@
 					       :expected-symbol :CHUNK))
   (let ((head-substream (to-chunk-head-substream (assoc :HEAD (cdr node))))
 	(children-substream (to-chunk-children-substream (assoc :CHILDREN (cdr node)))))
-    (format nil "~A{~A}" head-substream children-substream)))
+    (format nil "^~A{~A}$" head-substream children-substream)))
 
 (defun to-stream (nodes)
   (format nil
@@ -143,33 +146,47 @@
 		  (:FORMAT (to-format-substream node))
 		  (:CHUNK (to-chunk-substream node))))))
 
-;; (to-stream
-;;  '((:JOINED-LEXICAL-UNIT
-;;     (((:FLAG) (:LING-FORM . "กาขา") (:INVARIABLE-PART) (:TAGS)
-;;       (:INVARIABLE-PART)))
-;;     (((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t1")
-;;       (:INVARIABLE-PART))
-;;      ((:FLAG) (:LING-FORM . "ขา") (:INVARIABLE-PART) (:TAGS "ม")
-;;       (:INVARIABLE-PART))))
-;;    (:UNPARSED . " ")
-;;    (:JOINED-LEXICAL-UNIT
-;;     (((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t1")
-;;       (:INVARIABLE-PART))
-;;      ((:FLAG) (:LING-FORM . "ขา") (:INVARIABLE-PART) (:TAGS "ม")
-;;       (:INVARIABLE-PART))))))
-;; (to-chunk-substream
-;;  '(:CHUNK
-;;  (:HEAD (:FLAG) (:LING-FORM . "N1") (:INVARIABLE-PART) (:TAGS "SN" "a")
-;;   (:INVARIABLE-PART))
-;;  (:CHILDREN
-;;   (:LEXICAL-UNIT
-;;    ((:FLAG) (:LING-FORM . "i") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART)))
-;;   (:UNPARSED . " ") (:FORMAT . "<o>")
-;;   (:LEXICAL-UNIT
-;;    ((:FLAG) (:LING-FORM . "j") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART)))
-;;   (:FORMAT . "</o>")
-;;   (:LEXICAL-UNIT
-;;    ((:FLAG) (:LING-FORM . "k") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART))))))
+(defun test-to-stream-1 ()
+  (to-stream
+   '((:JOINED-LEXICAL-UNIT
+      (((:FLAG) (:LING-FORM . "กาขา") (:INVARIABLE-PART) (:TAGS)
+	(:INVARIABLE-PART)))
+      (((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t1")
+	(:INVARIABLE-PART))
+       ((:FLAG) (:LING-FORM . "ขา") (:INVARIABLE-PART) (:TAGS "ม")
+	(:INVARIABLE-PART))))
+     (:UNPARSED . " ")
+     (:JOINED-LEXICAL-UNIT
+      (((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t1")
+	(:INVARIABLE-PART))
+       ((:FLAG) (:LING-FORM . "ขา") (:INVARIABLE-PART) (:TAGS "ม")
+	(:INVARIABLE-PART)))))))
+
+(defun test-to-lexical-unit-stream-1 ()
+  (to-lexical-unit-substream
+   '(:LEXICAL-UNIT
+     ((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t1")
+      (:INVARIABLE-PART))
+     ((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t2")
+      (:INVARIABLE-PART))
+     ((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t3")
+      (:INVARIABLE-PART)))))
+
+(defun test-to-chunk-substream ()
+  (to-chunk-substream
+   '(:CHUNK
+     (:HEAD (:FLAG) (:LING-FORM . "N1") (:INVARIABLE-PART) (:TAGS "SN" "a")
+      (:INVARIABLE-PART))
+     (:CHILDREN
+      (:LEXICAL-UNIT
+       ((:FLAG) (:LING-FORM . "i") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART)))
+      (:UNPARSED . " ") (:FORMAT . "<o>")
+      (:LEXICAL-UNIT
+       ((:FLAG) (:LING-FORM . "j") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART)))
+      (:FORMAT . "</o>")
+      (:LEXICAL-UNIT
+       ((:FLAG) (:LING-FORM . "k") (:INVARIABLE-PART) (:TAGS) (:INVARIABLE-PART)))))))
+
 ;; (to-joined-lexical-unit-substream
 ;;  '(:JOINED-LEXICAL-UNIT
 ;;    (((:FLAG) (:LING-FORM . "กาขา") (:INVARIABLE-PART) (:TAGS)
@@ -178,13 +195,7 @@
 ;;      (:INVARIABLE-PART))
 ;;     ((:FLAG) (:LING-FORM . "ขา") (:INVARIABLE-PART) (:TAGS "ม")
 ;;      (:INVARIABLE-PART)))))
-;; (to-lexical-unit-substream '(:LEXICAL-UNIT
-;; 			     ((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t1")
-;; 			      (:INVARIABLE-PART))
-;; 			     ((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t2")
-;; 			      (:INVARIABLE-PART))
-;; 			     ((:FLAG) (:LING-FORM . "กา") (:INVARIABLE-PART) (:TAGS "t3")
-;; 			      (:INVARIABLE-PART))))
+
 ;; (to-sub-lu-substream '((:FLAG) (:LING-FORM . "หมาบ้าน") (:INVARIABLE-PART) (:TAGS "n" "sg") (:INVARIABLE-PART . " ตัว")))
 ;; (to-invariable-part-substream '(:INVARIABLE-PART . " ตัว"))
 ;; (to-tags-substream '(:TAGS . "n"))
