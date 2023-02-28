@@ -10,3 +10,10 @@
   :components ((:file "package")
                (:file "parser")
 	       (:file "generator")))
+
+
+(asdf:defsystem #:cl-apertium-stream/tests
+  :depends-on (#:fiveam #:cl-apertium-stream)
+  :components ((:module "t"
+                :serial t
+                :components ((:file "parsing-tests")))))
