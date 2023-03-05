@@ -48,7 +48,7 @@
 
 (defrule ling-form (* ling-form-char)
   (:lambda (lst)
-    (cons :ling-form (concat-string lst))))
+    (cons :ling-form (unescape (concat-string lst)))))
 
 (defrule sub-invariable-part (and #\# ling-form)
   (:lambda (lst)
@@ -104,7 +104,7 @@
 
 (defrule unparsed (+ (not (or #\[ #\] #\^ #\$ #\} #\{)))
   (:lambda (lst)
-    (cons :unparsed (concat-string lst))))
+    (cons :unparsed (unescape (concat-string lst)))))
 
 (defrule chunk-children (and #\{
                              (* (or format

@@ -1,7 +1,7 @@
-(defpackage #:parsing-tests
+(defpackage #:string-manipulation-tests
   (:use :cl :fiveam))
 
-(in-package :parsing-tests)
+(in-package :string-manipulation-tests)
 
 (def-suite unescape-suite
   :description "Unescape test suite")
