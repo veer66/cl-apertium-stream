@@ -24,14 +24,6 @@
     (error 'generation-error :nodes (list node) :expected-symbol :FLAG))
   (or (cdr node) ""))
 
-(defvar LING-FORM-ESCAPE-PAT "([\\^\\$@\\*\\\\<>{}/\\]\\[])")
-
-(defun escape-ling-form (text)
-  (regex-replace-all LING-FORM-ESCAPE-PAT
-		     text
-		     "\\\\\\1"
-		     :preserve-case t))
-
 (defun to-ling-form-substream (node)
   (unless (eq (car node) :LING-FORM)
     (error 'generation-error :generation-error :nodes (list node)

@@ -8,12 +8,13 @@
   :serial t
   :depends-on (#:esrap #:cl-ppcre)
   :components ((:file "package")
+               (:file "string-manipulator")
                (:file "parser")
 	       (:file "generator")))
-
 
 (asdf:defsystem #:cl-apertium-stream/tests
   :depends-on (#:fiveam #:cl-apertium-stream)
   :components ((:module "t"
                 :serial t
-                :components ((:file "parsing-tests")))))
+                :components ((:file "parsing-tests")
+                             (:file "string-manipulation-tests")))))

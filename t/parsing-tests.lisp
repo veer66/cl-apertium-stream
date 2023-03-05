@@ -16,6 +16,8 @@
   (is (equal (caar (cl-apertium-stream:parse-stream "^Round<pr>$ ^Plastic<n><sg>$ ^Handle<vblex><pres>$ ^Rubber<n><sg>$ ^Seal<vblex><pres>$ ^20<num>$ ^mm<n><sg>$^.<sent>$"))
              :lexical-unit)))
 
+
+
 ;; (cl-apertium-stream:parse-stream "^gram<n><sg>$ \\/ ^pack<vblex><pres>$")
 
 (run :parsing-tag-results)
