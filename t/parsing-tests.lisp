@@ -25,4 +25,25 @@
     (is (equal (cdr unparsed-unit)
                " / "))))
 
+(test parsing-with-at
+  "Parse something with at"
+  (let* ((stream (cl-apertium-stream:parse-stream "^ONLY@CENTRAL$"))
+         (lu (car stream))
+         (lu-data (cdr lu))
+         (lu-data0 (car lu-data))
+         (ling-form (cadr lu-data0))
+         (ling-from-data (cdr ling-form)))
+    (is (equal ling-from-data "ONLY@CENTRAL"))))
+
+(test parsing-with-slash-at
+  "Parse something with slash and at"
+  (let* ((stream (cl-apertium-stream:parse-stream "^ONLY\\@CENTRAL$"))
+         (lu (car stream))
+         (lu-data (cdr lu))
+         (lu-data0 (car lu-data))
+         (ling-form (cadr lu-data0))
+         (ling-from-data (cdr ling-form)))
+    (is (equal ling-from-data "ONLY@CENTRAL"))))
+
+
 (run! 'test-parsing-suite)
