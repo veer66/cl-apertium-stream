@@ -45,5 +45,12 @@
          (ling-from-data (cdr ling-form)))
     (is (equal ling-from-data "ONLY@CENTRAL"))))
 
+(test parsing-with-sharp
+  "Parse something with #"
+  (is (cl-apertium-stream:parse-stream "^fell asleep/fall<vblex><past># asleep$")))
+
+(test parsing-with-space-sharp
+  "Parse something with space and #"
+  (is (cl-apertium-stream:parse-stream "^fell asleep/fall<vblex><past> # asleep$")))
 
 (run! 'test-parsing-suite)

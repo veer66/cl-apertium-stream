@@ -85,8 +85,10 @@
 
 (defrule sub-lu (and flag
                      ling-form
+		     (* " ")
                      invariable-part
                      tags
+		     (* " ")
                      invariable-part))
 
 (defrule sub-lus (and sub-lu (* (and #\/ sub-lu)))
