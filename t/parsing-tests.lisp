@@ -53,4 +53,8 @@
   "Parse something with space and #"
   (is (cl-apertium-stream:parse-stream "^fell asleep/fall<vblex><past> # asleep$")))
 
+(test parsing-with-escaped-dollar-sign
+  "Parse something with \\$"
+  (is (cl-apertium-stream:parse-stream "^6<num>$ \\$^discount<n><sg>$")))
+
 (run! 'test-parsing-suite)
