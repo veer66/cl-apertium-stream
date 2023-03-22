@@ -57,4 +57,9 @@
   "Parse something with \\$"
   (is (cl-apertium-stream:parse-stream "^6<num>$ \\$^discount<n><sg>$")))
 
+
+(test parsing-with-escaped-backslash-quote
+  "Parse something with \\\\ \""
+  (is (equal "\\ \"" (cdar (cl-apertium-stream:parse-stream "\\\\ \"")))))
+
 (run! 'test-parsing-suite)

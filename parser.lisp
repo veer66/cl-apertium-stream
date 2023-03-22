@@ -14,13 +14,9 @@
         do
            (cond
              ((characterp k) (push k buf))
-             
-             ((and (listp k)
-                   (stringp #1=(cadr k))
-                   (= 1 (length #1#)))
-              (push (car (coerce #1# 'list))
-                    buf))
-             
+	     ((listp k) (loop for k-elem in k do
+			      (loop for ch across k-elem
+				    do (push ch buf))))
              (t (error 'invalid-char-list-element :lst l)))
         finally
            (return (coerce (reverse buf) 'string))))
@@ -68,7 +64,7 @@
 
 (defrule ling-form (* ling-form-char)
   (:lambda (lst)
-    (cons :ling-form (char-and-list-to-string lst))))
+    (cons :ling-form (unescape (char-and-list-to-string lst)))))
 
 (defrule sub-invariable-part (and #\# ling-form)
   (:lambda (lst)
