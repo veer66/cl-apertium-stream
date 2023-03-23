@@ -120,7 +120,7 @@
   (:lambda (lst)
     (cons :joined-lexical-unit (cadr lst))))
 
-(defrule unparsed (+ (or (not (or #\^ #\$ #\* #\# #\/ #\< #\> #\{ #\} #\\ #\[ #\]))
+(defrule unparsed (+ (or (not (or #\^ #\$ #\* #\/ #\< #\> #\{ #\} #\\ #\[ #\]))
 			 (and #\\ #\^)
 			 (and #\\ #\$)
 			 (and #\\ #\@)
@@ -132,8 +132,7 @@
 			 (and #\\ #\})
 			 (and #\\ #\\)
 			 (and #\\ #\[)
-			 (and #\\ #\])
-			 (and #\\ #\#)))
+			 (and #\\ #\])))
   (:lambda (lst)
     (cons :unparsed (unescape (char-and-list-to-string lst)))))
 
