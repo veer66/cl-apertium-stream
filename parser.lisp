@@ -120,11 +120,10 @@
   (:lambda (lst)
     (cons :joined-lexical-unit (cadr lst))))
 
-(defrule unparsed (+ (or (not (or #\^ #\$ #\* #\/ #\< #\> #\{ #\} #\\ #\[ #\]))
+(defrule unparsed (+ (or (not (or #\^ #\$ #\/ #\< #\> #\{ #\} #\\ #\[ #\]))
 			 (and #\\ #\^)
 			 (and #\\ #\$)
 			 (and #\\ #\@)
-			 (and #\\ #\*)
 			 (and #\\ #\/)
 			 (and #\\ #\<)
 			 (and #\\ #\>)

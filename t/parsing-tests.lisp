@@ -62,8 +62,12 @@
   "Parse something with \\\\ \""
   (is (equal "\\ \"" (cdar (cl-apertium-stream:parse-stream "\\\\ \"")))))
 
-(test parsing-with-sharp-in-unk
-  "Parse something with # in unk"
+(test parsing-with-sharp-in-unparsed
+  "Parse something with # in unparsed"
   (is (cl-apertium-stream:parse-stream "^Item<n><sg>$ # ^*PO25P4S$")))
+
+(test parsing-with-star-in-unparsed
+  "Parse something with * in unparsed"
+  (is (cl-apertium-stream:parse-stream "^.<sent>$ * ^*suckerfish$")))
 
 (run! 'test-parsing-suite)
