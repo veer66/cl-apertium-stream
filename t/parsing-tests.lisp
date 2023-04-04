@@ -70,4 +70,8 @@
   "Parse something with * in unparsed"
   (is (cl-apertium-stream:parse-stream "^.<sent>$ * ^*suckerfish$")))
 
+(test parsing-with-star-in-unparsed
+  "Parse something with / in unparsed"
+  (is (cl-apertium-stream:parse-stream "^.<sent>$ \\/ ^*suckerfish$")))
+
 (run! 'test-parsing-suite)
